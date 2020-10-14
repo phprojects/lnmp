@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 Backup_MySQL()
 {
@@ -416,8 +416,8 @@ no-auto-rehash
 [myisamchk]
 key_buffer_size = 20M
 sort_buffer_size = 20M
-read_buffer = 2M
-write_buffer = 2M
+read_buffer_size = 2M
+write_buffer_size = 2M
 
 [mysqlhotcopy]
 interactive-timeout
@@ -512,8 +512,8 @@ no-auto-rehash
 [myisamchk]
 key_buffer_size = 20M
 sort_buffer_size = 20M
-read_buffer = 2M
-write_buffer = 2M
+read_buffer_size = 2M
+write_buffer_size = 2M
 
 [mysqlhotcopy]
 interactive-timeout
@@ -660,10 +660,13 @@ Upgrade_MySQL()
         if [ $? -eq 0 ]; then
             echo "Download ${mysql_src} successfully!"
         else
-            echo "You enter MySQL Version was: ${mysql_version}"
-            Echo_Red "Error! You entered a wrong version number, please check!"
-            sleep 5
-            exit 1
+            wget -c --progress=bar:force https://cdn.mysql.com/archives/MySQL-${mysql_short_version}/${mysql_src}
+            if [ $? -ne 0 ]; then
+                echo "You enter MySQL Version was: ${mysql_version}"
+                Echo_Red "Error! You entered a wrong version number, please check!"
+                sleep 5
+                exit 1
+            fi
         fi
     fi
     echo "============================check files=================================="
